@@ -105,7 +105,7 @@ class CIJoe
     end
     @current_build = Build.new(@project_path, @user, @project)
     write_build 'current', @current_build
-    Thread.new { build!(branch) }
+    Thread.new { build!(@current_build, branch) }
   end
 
   def open_pipe(cmd)
@@ -123,9 +123,8 @@ class CIJoe
   end
 
   # update git then run the build
-  def build!(branch=nil)
+  def build!(build,branch=nil)
     @git_branch = branch
-    build = @current_build
     output = ''
     git_update
     build.sha = git_sha
